@@ -40,10 +40,8 @@ export const exoworldsIpfs = async (DB) => {
           "metadata.name": `${Name}`,
           "metadata.description": `${Description}`,
           "metadata.image": `${Image}`,
-
           "metadata.wrapped.tokenId": `${tokenId}`,
           "metadata.wrapped.original_uri": `https://exoworlds.mypinata.cloud/ipfs/Qmf4ouMBiwdg6YyZjzUcCh7iGYq7jve53bqfVFHF1HE5xB/${item.metadata.wrapped.tokenId}.json`,
-
           "metadata.attributes": `${attributes}`,
         }
       );
