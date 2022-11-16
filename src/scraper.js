@@ -1,10 +1,19 @@
+import { Framework } from "@vechain/connex-framework";
+import { Driver, SimpleNet } from "@vechain/connex-driver";
+import { erc721Abi } from "../erc721Abi.js";
+
 //contract 0x3473c5282057D7BeDA96C1ce0FE708e890764009
 //origin 25
-export const somthingelse = async (DB) => {
+export const exoworldsIpfs = async (DB) => {
   const trxs = await DB.getTrx({
     "metadata.wrapped.contract": "0x3473c5282057D7BeDA96C1ce0FE708e890764009",
     "metadata.wrapped.origin": "25",
-    "metadata.wrapped.original_uri": "",
+    $or: [
+      { "metadata.wrapped.original_uri": "" },
+      { "metadata.wrapped.original_uri": undefined },
+      { "metadata.wrapped.original_uri": null },
+      { "metadata.wrapped.original_uri": { $exists: false } },
+    ],
   });
 
   if (trxs.length === 0) {
@@ -16,17 +25,15 @@ export const somthingelse = async (DB) => {
     const resp = await DB.updateTrx(
       { _id: item._id },
       {
-        "metadata.wrapped.original_uri": `https://nfts.vechainstats.com/exoworlds/${item.metadata.wrapped.tokenId}.webp?r=6dc18s1f-ecd243e0`,
+        "metadata.wrapped.original_uri": `https://exoworlds.mypinata.cloud/ipfs/Qmf4ouMBiwdg6YyZjzUcCh7iGYq7jve53bqfVFHF1HE5xB/${item.metadata.wrapped.tokenId}.json`,
       }
     );
     console.log(resp.value.metadata.wrapped);
   }
 };
-import { Framework } from "@vechain/connex-framework";
-import { Driver, SimpleNet } from "@vechain/connex-driver";
-import { erc721Abi } from "../erc721Abi.js";
 
-export async function exoworlds(DB) {
+
+export async function exoworldsContract(DB) {
   try {
     const trxs = await DB.getTrx({
       "metadata.wrapped.contract": "0x3473c5282057D7BeDA96C1ce0FE708e890764009",
@@ -65,7 +72,6 @@ export async function exoworlds(DB) {
         continue;
       }
     }
-
   } catch (error) {
     console.log(error);
   }
