@@ -42,7 +42,7 @@ export const exoworldsIpfs = async (DB) => {
           "metadata.image": `${Image || item.metadata.image}`,
           "metadata.wrapped.tokenId": `${tokenId || item.metadata.wrapped.tokenId}`,
           "metadata.wrapped.original_uri": `https://exoworlds.mypinata.cloud/ipfs/Qmf4ouMBiwdg6YyZjzUcCh7iGYq7jve53bqfVFHF1HE5xB/${item.metadata.wrapped.tokenId}.json`,
-          "metadata.attributes": `${attributes || item.metadata.attributes}`,
+          "metadata.attributes": attributes || item.metadata.attributes,
         }
       );
       console.log(dbResp.value.metadata.wrapped);
