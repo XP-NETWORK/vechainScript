@@ -30,19 +30,19 @@ export const exoworldsIpfs = async (DB) => {
   for (let item of trxs) {
     try {
       const resp = await axios.get(
-        `https://exoworlds.mypinata.cloud/ipfs/Qmf4ouMBiwdg6YyZjzUcCh7iGYq7jve53bqfVFHF1HE5xB/${item.metadata.wrapped.tokenId}.json`
+        `https://exoworlds.mypinata.cloud/ipfs/Qmf4ouMBiwdg6YyZjzUcCh7iGYq7jve53bqfVFHF1HE5xB/${item?.metadata?.wrapped?.tokenId}.json`
       );
       const { Name, Description, tokenId, Image, attributes } = resp?.data;
 
       const dbResp = await DB.updateTrx(
         { _id: item._id },
         {
-          "metadata.name": `${Name}`,
-          "metadata.description": `${Description}`,
-          "metadata.image": `${Image}`,
-          "metadata.wrapped.tokenId": `${tokenId}`,
+          "metadata.name": `${Name || item.metadata.name}`,
+          "metadata.description": `${Description || item.metadata.description}`,
+          "metadata.image": `${Image || item.metadata.image}`,
+          "metadata.wrapped.tokenId": `${tokenId || item.metadata.wrapped.tokenId}`,
           "metadata.wrapped.original_uri": `https://exoworlds.mypinata.cloud/ipfs/Qmf4ouMBiwdg6YyZjzUcCh7iGYq7jve53bqfVFHF1HE5xB/${item.metadata.wrapped.tokenId}.json`,
-          "metadata.attributes": `${attributes}`,
+          "metadata.attributes": `${attributes || item.metadata.attributes}`,
         }
       );
       console.log(dbResp.value.metadata.wrapped);
