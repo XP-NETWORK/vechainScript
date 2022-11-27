@@ -52,3 +52,50 @@ export const exoworldsIpfs = async (DB) => {
     }
   }
 };
+
+//origin 33
+export const fantase = async (DB) => {
+  const trxs = await DB.getTrx({
+    "metadata.wrapped.contract": "0xed0972f76e837D637c534329708077e5Aa8c50E7",
+    "metadata.wrapped.origin": "33",
+    $or: [
+      { "metadata.wrapped.original_uri": "" },
+      { "metadata.wrapped.original_uri": undefined },
+      { "metadata.wrapped.original_uri": null },
+      { "metadata.wrapped.original_uri": { $exists: false } },
+      { "metadata.name": "XP.Network Wrapped NFT" },
+      { "metadata.name": "" },
+      { "metadata.description": "" },
+      { "metadata.image": "" },
+    ],
+  });
+
+  if (trxs.length === 0) {
+    console.log("did not find anything");
+    return;
+  }
+
+  console.log({ length: trxs.length });
+  for (let item of trxs) {
+    try {
+      const resp = await axios.get(
+        `https://metadata.fantase.io/0xed0972f76e837d637c534329708077e5aa8c50e7/${item?.metadata?.wrapped?.tokenId}.json`
+      );
+      const { name, image, description } = resp?.data;
+
+      const dbResp = await DB.updateTrx(
+        { _id: item._id },
+        {
+          "metadata.name": `${name || item.metadata.name}`,
+          "metadata.description": `${description || item.metadata.description}`,
+          "metadata.image": `${image || item.metadata.image}`,
+          "metadata.wrapped.original_uri": `https://metadata.fantase.io/0xed0972f76e837d637c534329708077e5aa8c50e7/${item?.metadata?.wrapped?.tokenId}.json`,
+        }
+      );
+      console.log(dbResp.value.metadata.wrapped);
+    } catch (error) {
+      console.log(error.message);
+      continue;
+    }
+  }
+};
