@@ -3,6 +3,35 @@
 import axios from "axios";
 
 //origin 25
+export const exoworldImages = async (DB) => {
+  const trxs = await DB.getTrx({
+    "metadata.wrapped.contract": "0x3473c5282057D7BeDA96C1ce0FE708e890764009",
+    "metadata.wrapped.origin": "25",
+  });
+
+  if (trxs.length === 0) {
+    console.log("did not find anything");
+    return;
+  }
+
+  console.log({ length: trxs.length });
+
+  for (let item of trxs) {
+    try {
+      const dbResp = await DB.updateTrx(
+        { _id: item._id },
+        {
+          "metadata.image": `https://exoworlds.mypinata.cloud/ipfs/QmYxZ1nd2v8vndskhsVUPx3kEVEpe28gM1nHTQD692tXp9/${item.metadata.wrapped.tokenId}.jpg`,
+        }
+      );
+      console.log(dbResp.value.metadata.wrapped);
+    } catch (error) {
+      console.log(error.message);
+      continue;
+    }
+  }
+};
+
 export const exoworldsIpfs = async (DB) => {
   const trxs = await DB.getTrx({
     "metadata.wrapped.contract": "0x3473c5282057D7BeDA96C1ce0FE708e890764009",
@@ -39,7 +68,7 @@ export const exoworldsIpfs = async (DB) => {
         {
           "metadata.name": `${Name || item.metadata.name}`,
           "metadata.description": `${Description || item.metadata.description}`,
-          "metadata.image": `${Image || item.metadata.image}`,
+          "metadata.image": `https://exoworlds.mypinata.cloud/ipfs/QmYxZ1nd2v8vndskhsVUPx3kEVEpe28gM1nHTQD692tXp9/${item.metadata.wrapped.tokenId}.jpg`,
           "metadata.wrapped.tokenId": `${tokenId || item.metadata.wrapped.tokenId}`,
           "metadata.wrapped.original_uri": `https://exoworlds.mypinata.cloud/ipfs/Qmf4ouMBiwdg6YyZjzUcCh7iGYq7jve53bqfVFHF1HE5xB/${item.metadata.wrapped.tokenId}.json`,
           "metadata.attributes": attributes || item.metadata.attributes,
