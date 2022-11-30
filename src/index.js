@@ -18,5 +18,5 @@ export default server.listen(PORT, async () => {
   const DB = await connect();
   cron.schedule(CRON.toString(), () => exoworldsIpfs(DB));
   cron.schedule(CRON.toString(), () => fantase(DB));
-  cron.schedule(CRON.toString(), () => exoworldImages(DB));
+  // cron.schedule(CRON.toString(), () => exoworldImages(DB));
 });
