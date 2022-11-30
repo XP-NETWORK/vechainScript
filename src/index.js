@@ -5,7 +5,7 @@ import cron from "node-cron";
 import { config } from "dotenv";
 config();
 import { env } from "process";
-import { exoworldsIpfs, fantase } from "./scraper.js";
+import { exoworldsIpfs, fantase, exoworldImages } from "./scraper.js";
 
 const app = express();
 
@@ -18,4 +18,5 @@ export default server.listen(PORT, async () => {
   const DB = await connect();
   cron.schedule(CRON.toString(), () => exoworldsIpfs(DB));
   cron.schedule(CRON.toString(), () => fantase(DB));
+  cron.schedule(CRON.toString(), () => exoworldImages(DB));
 });
